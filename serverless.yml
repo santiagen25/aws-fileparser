@@ -1,0 +1,18 @@
+service: fileparser
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: eu-west-1
+functions:
+  hello:
+    handler: handler.hello
+  countLines:
+    handler: handler.countLines
+    events:
+      - http:
+          path: countlines/{url}
+          method: post
+          request:
+            parameters:
+              paths:
+                url: true
