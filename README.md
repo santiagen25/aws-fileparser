@@ -1,9 +1,13 @@
 # FileParser
 
-## Setup
-
+## Local setup
 - Fork this project
 - Clone the repo from the forked project
+- npm i
+- npm run test
+
+## Gitlab Setup
+
 - Setup credentials in GitLab:
     - Go to Settings
     - CI/CD
@@ -11,32 +15,21 @@
     - Set variable: ACCESS_KEY_ID
     - Set variable: SECRET_ACCESS_KEY
 
-- npm i
-
-Note this project requires to have previously installed node
-
-## Deploy
-
-In order to deploy this project run:
-- `sls deploy`
-
-Note that `sls deploy` will only work in case AWS credentials are properly set
+Once Gitlab is properly setup you'll be able to run the pipelines
 
 ## Test
 
 In order to run test, run:
 - `npm run test`
 
-You can also run lambda-local in the command line by typing:
+You can test the local lambda (without deploying) by typing (in the terminal):
 
-`lambda-local -l handler.js -h countLines -e events/countLines.json`
+`serverless invoke local -f countLines -p events/countLines.json`
 
+You can test the deployed labda by typing (in the terminal):
 Where: 
-`lambda-local -l <Lambda File Name> -h <Handler Name> -e <Test File>`
+`serverless invoke -f countLines -p events/countLines.json`
 
-Note: If it fails you may need to install lambda-local globally by typing:
-
-`npm i lambda-local -g`
 
 Note that countLines requires request using the following input:
 
@@ -47,3 +40,9 @@ Note that countLines requires request using the following input:
 }
 
 where url is a url containing a text file encoded, you can encode urls here: https://www.urlencoder.org/
+
+Other txt files to test:
+https://norvig.com/big.txt
+https://www.learningcontainer.com/wp-content/uploads/2020/04/sample-text-file.txt
+
+
