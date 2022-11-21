@@ -35,7 +35,7 @@ Note that countLines requires request using the following input:
 
 {
     "pathParameters": {
-      "url": "https%3A%2F%2Fwww.w3.org%2FTR%2FPNG%2Fiso_8859-1.txt"
+      "url": "https%3A%2F%2Fwww.sample-videos.com%2Ftext%2FSample-text-file-20kb.txt"
     }
 }
 
