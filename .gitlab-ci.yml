@@ -30,8 +30,8 @@ deploy-master:
     - master
   variables:
     STAGE: prod
-    ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID_prod}
-    SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY_prod}
+    ACCESS_KEY_ID: ${ACCESS_KEY_ID}
+    SECRET_ACCESS_KEY: ${SECRET_ACCESS_KEY}
 
 deploy-sandbox:
   stage: deploy
@@ -43,5 +43,5 @@ deploy-sandbox:
     - merge_requests
   variables:
     STAGE: dev
-    ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID_dev}
-    SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY_dev}
+    ACCESS_KEY_ID: ${ACCESS_KEY_ID}
+    SECRET_ACCESS_KEY: ${SECRET_ACCESS_KEY}

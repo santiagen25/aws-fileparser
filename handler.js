@@ -17,6 +17,8 @@ module.exports.countLines = async event => {
     throw new BadRequestError("Missing url");
   }
 
+  console.log(url)
+
   var countLines = new CountLines(url);
   var result=await countLines.execute();
   
