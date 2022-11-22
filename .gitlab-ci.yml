@@ -19,7 +19,7 @@ test:
 
 .deploy:
   script:
-    - serverless config credentials --provider aws --key ${ACCESS_KEY_ID} --secret ${SECRET_ACCESS_KEY}
+    - serverless config credentials --provider aws --key ${KEY} --secret ${SECRET}
     - serverless deploy --stage=${STAGE} --verbose
 
 deploy-master:
@@ -30,8 +30,8 @@ deploy-master:
     - master
   variables:
     STAGE: prod
-    ACCESS_KEY_ID: ${ACCESS_KEY_ID}
-    SECRET_ACCESS_KEY: ${SECRET_ACCESS_KEY}
+    KEY: ${ACCESS_KEY_ID}
+    SECRET: ${SECRET_ACCESS_KEY}
 
 deploy-sandbox:
   stage: deploy
@@ -43,5 +43,5 @@ deploy-sandbox:
     - merge_requests
   variables:
     STAGE: dev
-    ACCESS_KEY_ID: ${ACCESS_KEY_ID}
-    SECRET_ACCESS_KEY: ${SECRET_ACCESS_KEY}
+    KEY: ${ACCESS_KEY_ID}
+    SECRET: ${SECRET_ACCESS_KEY}
