@@ -13,7 +13,7 @@ const executeLambda = async payload => {
 
 const validUrlPayload = {
   pathParameters: {
-    url: "https%3A%2F%2Fwww.sample-videos.com%2Ftext%2FSample-text-file-20kb.txt"
+    url: "https%3A%2F%2Ffilesamples.com%2Fsamples%2Fdocument%2Ftxt%2Fsample3.txt"
   },
 };
 
@@ -22,7 +22,7 @@ describe("CountLines", ()=>{
     const response = await executeLambda(validUrlPayload);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toBe(59);
+    expect(response.body).toBe(21);
   });
 
   //TODO: What if there's not a URL in the payload?
