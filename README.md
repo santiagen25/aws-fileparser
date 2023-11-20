@@ -24,18 +24,18 @@ In order to run test, run:
 
 You can test the local lambda (without deploying) by typing (in the terminal):
 
-`serverless invoke local -f countLines -p events/countLines.json`
+`npm run test-count-lines`
 
 You can test the deployed labda by typing (in the terminal):
 Where: 
-`serverless invoke -f countLines -p events/countLines.json`
+`npm run test-count-lines-remote`
 
 
 Note that countLines requires request using the following input:
 
 {
     "pathParameters": {
-      "url": "https%3A%2F%2Fwww.sample-videos.com%2Ftext%2FSample-text-file-20kb.txt"
+      "url": "https%3A%2F%2Ffilesamples.com%2Fsamples%2Fdocument%2Ftxt%2Fsample3.txt"
     }
 }
 

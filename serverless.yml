@@ -4,12 +4,27 @@ frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs18.x
+  memorySize: 512
   region: eu-west-1
+  environment: 
+    BUCKET_NAME: ${self:custom.readBucketName}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+          Resource:
+            - arn:aws:s3:::${self:custom.readBucketName}/*
+            - arn:aws:s3:::${self:custom.readBucketName}
+ 
 
 functions:
   hello:
     handler: handler.hello
+
   countLines:
     handler: handler.countLines
     events:
@@ -20,3 +35,25 @@ functions:
             parameters:
               paths:
                 url: true
+
+  countWordsS3:
+    handler: handler.countWordsS3
+    events:
+      - http:
+          path: countWordsS3/{fileName}
+          method: get
+          request:
+            parameters:
+              paths:
+                fileName: true
+
+custom:
+  yourName: "albert"
+  readBucketName: "${self:custom.yourName}fabulousreadbucket"
+
+resources:
+  Resources:
+    readBucket:
+        Type: AWS::S3::Bucket
+        Properties:
+          BucketName: ${self:custom.readBucketName}
