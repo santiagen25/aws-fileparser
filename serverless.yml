@@ -6,6 +6,7 @@ provider:
   name: aws
   runtime: nodejs18.x
   memorySize: 512
+  stage: ${opt:stage, "dev"}
   region: eu-west-1
   environment: 
     BUCKET_NAME: ${self:custom.readBucketName}
@@ -49,7 +50,7 @@ functions:
 
 custom:
   yourName: "albert"
-  readBucketName: "${self:custom.yourName}fabulousreadbucket"
+  readBucketName: "${self:custom.yourName}-fabulous-read-bucket-${self:provider.stage}"
 
 resources:
   Resources:
