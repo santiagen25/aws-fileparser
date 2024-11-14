@@ -30,7 +30,7 @@ module.exports.countWordsS3 = async event => {
   try {
     var fileName = event["pathParameters"]["fileName"];
   } catch (error) {
-    throw new BadRequestError("Missing url");
+    throw new BadRequestError("Missing fileName parameter");
   }
 
   var s3Handler = new S3Handler();
