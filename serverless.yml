@@ -8,9 +8,12 @@ provider:
   memorySize: 512
   stage: ${opt:stage, "dev"}
   region: eu-west-1
+  deploymentBucket:
+    name: fileparser-deployment-bucket
   environment: 
     BUCKET_NAME: ${self:custom.readBucketName}
-
+    WRITE_BUCKET_NAME: ${self:custom.writeBucketName}
+  
   iam:
     role:
       statements:
@@ -20,12 +23,20 @@ provider:
           Resource:
             - arn:aws:s3:::${self:custom.readBucketName}/*
             - arn:aws:s3:::${self:custom.readBucketName}
- 
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+          Resource:
+            - arn:aws:s3:::${self:custom.writeBucketName}/*
+            - arn:aws:s3:::${self:custom.writeBucketName}
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource: "arn:aws:logs:${self:provider.region}:*:log-group:/aws/lambda/*"
 
 functions:
-  hello:
-    handler: handler.hello
-
   countLines:
     handler: handler.countLines
     events:
@@ -48,13 +59,44 @@ functions:
               paths:
                 fileName: true
 
+  countLinesFromS3:
+    handler: handler.countLinesFromS3
+    events:
+      - s3:
+          bucket: ${self:custom.readBucketName}
+          event: s3:ObjectCreated:*
+          existing: true
+
 custom:
-  yourName: "albert"
+  yourName: "santi-torrabadella"
   readBucketName: "${self:custom.yourName}-fabulous-read-bucket-${self:provider.stage}"
+  writeBucketName: "${self:custom.yourName}-fabulous-write-bucket-${self:provider.stage}"
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
 
 resources:
   Resources:
     readBucket:
-        Type: AWS::S3::Bucket
-        Properties:
-          BucketName: ${self:custom.readBucketName}
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.readBucketName}
+
+    writeBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.writeBucketName}
+
+package:
+  patterns:
+    - "!aws/**"
+    - "!awscliv2.zip"
+    - "!__tests__/**"
+    - "!jest.config.js"
+    - "!test-file.txt"
+
+
+layers:
+  commonDependencies:
+    path: layers

@@ -6,3 +6,7 @@ jspm_packages
 .serverless
 
 .dccache
+
+#aws cli
+aws
+awscliv2.zip

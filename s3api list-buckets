@@ -1,0 +1,21 @@
+{
+    "Buckets": [
+        {
+            "Name": "fileparser-prod-serverlessdeploymentbucket-sbpaytve4zej",
+            "CreationDate": "2024-11-14T19:32:23+00:00"
+        },
+        {
+            "Name": "santi-torrabadella-deployment-bucket",
+            "CreationDate": "2024-12-11T16:24:10+00:00"
+        },
+        {
+            "Name": "serverless-hello-world-de-serverlessdeploymentbuck-hxhfmywozyx5",
+            "CreationDate": "2024-11-14T19:01:29+00:00"
+        }
+    ],
+    "Owner": {
+        "DisplayName": "santiago.torrabadella",
+        "ID": "7db6b12ed95a474f4595d0762e41ef403732161ba8ee8e83b183feb67c70249c"
+    },
+    "Prefix": null
+}

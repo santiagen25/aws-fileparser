@@ -1,33 +1,68 @@
-const lambdaLocal = require("lambda-local");
-const path = require("path");
+const { mockClient } = require('aws-sdk-client-mock');
+const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
+const lambdaLocal = require('lambda-local');
+const path = require('path');
+const fs = require("fs");
 
-const executeLambda = async payload => {
-  return await lambdaLocal.execute({
-    event: payload,
-    lambdaPath: path.join(__dirname, "../handler.js"),
-    lambdaHandler: "countLines",
-    timeoutMs: 60000,
-    verboseLevel: 0
+const s3Mock = mockClient(S3Client);
+
+const event = {
+  Records: [
+    {
+      s3: {
+        bucket: { name: "mocked-read-bucket" },
+        object: { key: "test-file.txt" },
+      },
+    },
+  ],
+};
+
+
+describe("countLinesFromS3", () => {
+  beforeAll(() => {
+    process.env.WRITE_BUCKET_NAME = 'mocked-write-bucket';
   });
-};
 
-const validUrlPayload = {
-  pathParameters: {
-    url: "https%3A%2F%2Ffilesamples.com%2Fsamples%2Fdocument%2Ftxt%2Fsample3.txt"
-  },
-};
+  beforeEach(() => {
+    s3Mock.reset();
+  });
 
-describe("CountLines", ()=>{
-  it("should return 200 when the payload is valid ", async () => {
-    const response = await executeLambda(validUrlPayload);
+  it("should process S3 event and count lines", async () => {
+    //cuando no queremos usar el archivo, podemos simular el contenido con esto
+    /*s3Mock.on(GetObjectCommand).resolves({
+      Body: Buffer.from("Line 1\nLine 2\nLine 3")
+    });*/
+    s3Mock.on(GetObjectCommand).resolves({
+      Body: Buffer.from(
+        fs.readFileSync(path.join(__dirname, "test-file.txt"), "utf-8")
+      )
+    });
+
+    // Mock de escritura en S3
+    s3Mock.on(PutObjectCommand).resolves({});
+
+    const response = await lambdaLocal.execute({
+      event,
+      lambdaPath: path.join(__dirname, '../handler.js'),
+      lambdaHandler: 'countLinesFromS3',
+    });
+    console.log("the response:")
+    console.log(response)
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toBe(21);
+    expect(JSON.parse(response.body)[0].lineCount).toBe(11);
   });
 
-  //TODO: What if there's not a URL in the payload?
-
-  //TODO: What if the URL specified is invalid?
-
+  it("should return an error if WRITE_BUCKET_NAME is not defined", async () => {
+    delete process.env.WRITE_BUCKET_NAME;
+  
+    const response = await lambdaLocal.execute({
+      event,
+      lambdaPath: path.join(__dirname, '../handler.js'),
+      lambdaHandler: 'countLinesFromS3',
+    });
+  
+    expect(response.statusCode).toBe(500);
+    expect(JSON.parse(response.body).error).toContain("Error processing S3 event");
+  });
 });
-

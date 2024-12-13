@@ -1,0 +1,10 @@
+{
+  "Records": [
+    {
+      "s3": {
+        "bucket": { "name": "mocked-read-bucket" },
+        "object": { "key": "test-file.txt" }
+      }
+    }
+  ]
+}

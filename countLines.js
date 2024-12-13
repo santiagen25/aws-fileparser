@@ -1,5 +1,4 @@
-"use strict";
-const querysgtring = require("query-string")
+const querystring = require("query-string");
 const axios = require("axios");
 const BadRequestError = require("./badRequestError");
 
@@ -9,21 +8,37 @@ class CountLines {
   }
 
   async execute() {
-    var decodedUrl=querysgtring.parse("url="+this.url)
-    var fileText= await this.retrieveFile(decodedUrl.url);
-    
-    if(fileText!=null){
-      const splittedLines = fileText.data.split('\n');
+    const decodedUrl = querystring.parse("url=" + this.url).url;
+
+    if (!decodedUrl || !this.isValidUrl(decodedUrl)) {
+      throw new BadRequestError("Invalid URL");
+    }
+
+    const fileText = await this.retrieveFile(decodedUrl);
+
+    if (fileText) {
+      const splittedLines = fileText.data.split("\n");
       return splittedLines.length;
+    }
+
+    throw new BadRequestError("Unable to retrieve file content");
+  }
+
+  async retrieveFile(url) {
+    console.log(url);
+    try {
+      return await axios.get(url);
+    } catch (error) {
+      throw new BadRequestError(`Url ${url} not found`);
     }
   }
 
-  async retrieveFile(decodedUrl){
-    console.log(JSON.stringify(decodedUrl))
+  isValidUrl(url) {
     try {
-      return await axios.get(decodedUrl)
-    } catch (error) {
-      throw new BadRequestError(`Url ${decodedUrl} not found`)
+      new URL(url);
+      return true;
+    } catch {
+      return false;
     }
   }
 }
