@@ -19,6 +19,8 @@ test:
 
 .deploy:
   script:
+    - echo "ACCESS_KEY_ID=${ACCESS_KEY_ID}"
+    - echo "SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}"
     - serverless config credentials --provider aws --key ${ACCESS_KEY_ID} --secret ${SECRET_ACCESS_KEY}
     - serverless deploy --stage=${STAGE} --verbose
 
