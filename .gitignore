@@ -9,4 +9,10 @@ jspm_packages
 
 #aws cli
 aws
-awscliv2.zip
+awscliv2.zipnode_modules/
+node_modules/
+*.log
+.env
+node_modules/
+*.log
+.env
